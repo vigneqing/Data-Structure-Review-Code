@@ -6,15 +6,19 @@ struct LNode {
 
 struct LNode *p = (struct LNode *)malloc(sizeof(struct LNode));//动态申请一个结点
 
-//更简单
+// 更简洁的 typedef 写法
 typedef struct LNode {
     ElemType data;
     struct LNode *next;
 } LNode, *LinkList;
 
-//要声明一个指向单链表第一个结点的指针
-//LNode *L;或者LinkList L; 前者强调是一个结点，后者强调是一个链表
+// LNode *L 强调结点; LinkList L 强调链表
 
+/* ─────────────────────────────────────────
+ * 二、初始化（不带头结点 vs 带头结点）
+ * ───────────────────────────────────────── */
+
+/* ─── 2.1 不带头结点 ─── */
 //初始化不带头结点的单链表
 typedef struct LNode {
     ElemType data;
@@ -38,6 +42,7 @@ bool ListEmpty(LinkList L) {
     return (L == NULL);
 }
 
+/* ─── 2.2 带头结点 ─── */
 //初始化带头节点的单链表
 typedef struct LNode {
     ElemType data;
@@ -64,7 +69,12 @@ bool ListEmpty(LinkList L) {
     return (L->next == NULL);
 }
 
-//单链表的基本操作--插入
+
+/* ═══════════════════════════════════════════════════════════════════
+ * 三、基本操作（带头结点）
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── 3.1 按位序插入 O(n) ─── */
 //按位序插入（带头节点）O(n)
 bool ListInsert(LinkList &L, int i, ElemType e) {
     if(i<1) return false; //插入位置不合法
@@ -90,6 +100,7 @@ bool ListInsert(LinkList &L, int i, ElemType e) {
    return ListInsertNext(p, e);
 }
 
+/* ─── 3.2 不带头结点的插入（i=1 时特殊处理） ─── */
 //不带头结点的单链表插入操作（就是对i=1的时候特殊处理） O(n)
 bool ListInsert(LinkList &L, int i, ElemType e) {
     if(i<1) return false; //插入位置不合法
@@ -114,10 +125,11 @@ bool ListInsert(LinkList &L, int i, ElemType e) {
     p->next = s; //将第i-1个结点的指针域指向新结点
     return true;
     */
-    //这一段代码可以改成后面的后插函数
+   // 等价于调用后插函数
    return ListInsertNext(p, e);
 }
 
+/* ─── 3.3 指定结点后插 O(1) ─── */
 //指定结点的后插操作 O(1)
 bool ListInsertNext(LNode *p, ElemType e) {
     if(p==NULL) return false; //插入位置不合法
@@ -129,6 +141,7 @@ bool ListInsertNext(LNode *p, ElemType e) {
     return true;
 }
 
+/* ─── 3.4 指定结点前插 O(1)（后插+交换数据） ─── */
 //前插操作 O(1)
 bool ListInsertPrior(LNode *p, ElemType e) {
     if(p==NULL) return false; //插入位置不合法
@@ -141,7 +154,7 @@ bool ListInsertPrior(LNode *p, ElemType e) {
     return true;
 }
 
-//书上：
+// 书上版本（传入已建好的结点 s）
 bool InsertPriorNode(LNode *p, ElemType e) {
     if(p == NULL || s == NULL) return false; //插入位置不合法
     s->next = p->next; //将新结点的指针域指向p结点的后继结点
@@ -152,6 +165,7 @@ bool InsertPriorNode(LNode *p, ElemType e) {
     return true;
 }
 
+/* ─── 3.5 按位序删除 O(n) ─── */
 //按位序删除（带头结点）O(n)
 bool ListDelete(LinkList &L, int i, ElemType &e) {
     if(i<1) return false; //删除位置不合法
@@ -173,6 +187,7 @@ bool ListDelete(LinkList &L, int i, ElemType &e) {
     return true;
 }
 
+/* ─── 3.6 指定结点删除 O(1)（复制后继数据再删后继） ─── */
 //指定结点的删除 O(1)
 bool DeleteNode(LNode *p) {
     if(p==NULL || p->next==NULL) return false; //删除位置不合法
@@ -183,6 +198,7 @@ bool DeleteNode(LNode *p) {
     return true;
 }
 
+/* ─── 3.7 按位查找 O(n) ─── */
 //单链表按位查找O(n)
 LNode *GetElem(LinkList &L, int i) {
     if(i<0) return NULL; //查找位置不合法
@@ -195,6 +211,7 @@ LNode *GetElem(LinkList &L, int i) {
     return p; //返回第i个结点的指针
 }
 
+/* ─── 3.8 按值查找 O(n) ─── */
 //按值查找O(n)
 LNode *LocateElem(LinkList &L, ElemType e) {
     LNode *p = L; //指向头结点
@@ -204,6 +221,7 @@ LNode *LocateElem(LinkList &L, ElemType e) {
     return p; //返回值为e的结点的指针
 }
 
+/* ─── 3.9 求表长 O(n) ─── */
 //求表的长度O(n)
 int ListLength(LinkList L) {
     int length = 0; //初始化长度为0
@@ -215,6 +233,12 @@ int ListLength(LinkList L) {
     return length; //返回长度
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════
+ * 四、链表的建立
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── 4.1 尾插法 O(n)（保持输入顺序） ─── */
 //尾插法建立单链表O(n)
 LinkList List_TailInsert(LinkList &L) {
     LNode *newnode, *tail; //newnode为新结点，tail为尾指针
@@ -233,6 +257,7 @@ LinkList List_TailInsert(LinkList &L) {
     return L; //返回链表头指针
 }
 
+/* ─── 4.2 头插法 O(n)（逆序建立，实现链表反转） ─── */
 //头插法建立单链表O(n)
 LinkList List_HeadInsert(LinkList &L) {
     LNode *newnode; //newnode为新结点

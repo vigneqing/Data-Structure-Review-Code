@@ -1,3 +1,11 @@
+/* ═══════════════════════════════════════════════════════════════════
+ * 队列 (Queue) — FIFO 先进先出
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+ * 一、顺序队列（循环队列）
+ * ───────────────────────────────────────── */
+
 //队列FIFO
 #define MaxSize 10
 typedef struct {
@@ -5,6 +13,7 @@ typedef struct {
     int front,rear;  //队头和队尾指针
 }SqQueue;
 
+/* ─── 1.1 初始化与判空 ─── */
 //初始化队列
 void InitQueue(SqQueue &Q){
     //初始时，队头尾都指向0
@@ -22,6 +31,7 @@ bool QueueEmpty(SqQueue Q){
     return Q.rear == Q.front;
 }
 
+/* ─── 1.2 入队（循环） ─── */
 //入队操作
 bool EnQueue(SqQueue &Q,ElemType x){
     if((Q.rear+1)%MaxSize==Q.front)//队列已满
@@ -31,6 +41,7 @@ bool EnQueue(SqQueue &Q,ElemType x){
     return true;
 }
 
+/* ─── 1.3 出队（循环） ─── */
 //出队
 bool DeQueue(SqQueue &Q,ElemType &x){
     if(Q.rear==Q.front)//队列已空
@@ -40,6 +51,7 @@ bool DeQueue(SqQueue &Q,ElemType &x){
     return true;
 }
 
+/* ─── 1.4 取队头 ─── */
 //查找
 bool GetHead(SqQueue Q,ElemType &x){
     if(Q.rear==Q.front)
@@ -48,16 +60,26 @@ bool GetHead(SqQueue Q,ElemType &x){
     return true;
 }
 
-//元素个数
-(rear+MaxSize-front)%MaxSize
+/* ─── 1.5 判满/判空的三种方案 ─── */
+//元素个数 (rear+MaxSize-front)%MaxSize
 
-//判断队列已满/已空
-//方案一：头尾位置
-//方案二：加个size
-//方案三：头=尾加上一个判断最后是插入还是删除的tag
-//大部分队尾指针指向的是队尾元素的后一个位置
+//方案一：牺牲一个存储单元  (rear+1)%MaxSize==front
+//方案二：增加 size 变量记录长度
+//方案三：增加 tag 标记最后一次操作是插入还是删除
+/*
+判断队列已满/已空
+方案一：头尾位置
+方案二：加个size
+方案三：头=尾加上一个判断最后是插入还是删除的tag
+大部分队尾指针指向的是队尾元素的后一个位置
+*/
 
-//链式队列
+
+/* ─────────────────────────────────────────
+ * 二、链式队列
+ * ───────────────────────────────────────── */
+
+//链式队列结点
 typedef struct LinkNode{
     ElemType data;
     struct LinkNode *next;
@@ -67,7 +89,7 @@ typedef struct {
     LinkNode *front,*rear;
 }LinkQueue;
 
-//初始化
+/* ─── 2.1 初始化（带头结点） ─── */
 void InitQueue(LinkQueue &Q){
     //初始时 front和rear都指向头结点
     Q.front=Q.rear=(LinkNode*)malloc(sizeof(LinkNode));
@@ -79,7 +101,7 @@ void testLinkQueue(){
     InitQueue(Q);
 }
 
-//入队
+/* ─── 2.2 入队（带头结点） ─── */
 void EnQueue(LinkQueue &Q,ElemType x){
     LinkNode *s=(LinkNode *)malloc(sizeof(LinkNode));
     s->data=x;
@@ -88,7 +110,7 @@ void EnQueue(LinkQueue &Q,ElemType x){
     Q.rear=s;
 }
 
-//不带头结点的时候要特殊处理
+/* ─── 2.3 入队（不带头结点，需特殊处理） ─── */
 void EnQueue(LinkQueue &Q,ElemType x){
     LinkNode *s=(LinkNode *)malloc(sizeof(LinkNode));
     s->data=x;
@@ -102,6 +124,7 @@ void EnQueue(LinkQueue &Q,ElemType x){
     }
 }
 
+/* ─── 2.3 出队（不带头结点） ─── */
 //队头元素出队(不带头结点)
 bool DeQueue(LinkQueue &Q,ElemType &x){
     if(Q.front==Q.rear)
