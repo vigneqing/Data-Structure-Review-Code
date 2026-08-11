@@ -1,3 +1,12 @@
+/* ═══════════════════════════════════════════════════════════════════
+ * 顺序表 (Sequential List)
+ * 用连续存储空间存放线性表，随机存取 O(1)，插入删除 O(n)
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+ * 一、静态分配
+ * ───────────────────────────────────────── */
+
 //静态分配
 #define MaxSize 10
 typedef struct {
@@ -5,7 +14,7 @@ typedef struct {
     int length;
 } SqList;
 
-//eg: 顺序表的初始化
+// 示例：顺序表的初始化
 #include <stdlib.h>
 #define MaxSize 10
 typedef struct {
@@ -30,6 +39,10 @@ int main() {
     return 0;
 }
 
+/* ─────────────────────────────────────────
+ * 二、动态分配
+ * ───────────────────────────────────────── */
+
 //动态分配
 #define InitSize 10
 typedef struct {
@@ -38,15 +51,16 @@ typedef struct {
     int length;
 } SqList;
 
-//动态申请和释放内存空间
-//C语言中使用malloc和free函数来动态申请和释放内存空间
+/* ─── 2.1 内存申请与释放 ─── */
+//C语言：malloc / free
 L.data = (ElemType *)malloc(InitSize * sizeof(ElemType)); 
 free(L.data); 
-//C++中使用new和delete运算符来动态申请和释放内存空间
+//C++：new / delete
 L.data = new ElemType[InitSize]; 
 delete[] L.data; 
 
-//eg:动态分配
+/* ─── 2.2 动态分配示例 ─── */
+//示例：动态分配
 #include <stdlib.h>
 #define InitSize 10
 typedef struct {
@@ -70,7 +84,7 @@ void IncreaseSize(SeqList &L, int len) {
     L.MaxSize += len;
     free(p);
 }
-//realloc函数
+//realloc 重新分配（注意：可能失败返回NULL导致原指针丢失）
 void ReallocSize(SeqList &L, int newMaxSize) {
     int *p = (int *)realloc(L.data, newMaxSize * sizeof(int));
     if(p) {
@@ -84,7 +98,7 @@ void ReallocSize(SeqList &L, int newMaxSize) {
         L.length = 0;
     }
 }
-//realloc函数的坑：可能导致内存泄漏或数据丢失
+//【注意】realloc 失败时可能返回NULL，导致原指针丢失（内存泄漏）
 
 int main() {
     SeqList L;
@@ -96,6 +110,13 @@ int main() {
 }
 
 
+
+
+/* ═══════════════════════════════════════════════════════════════════
+ * 三、基本操作
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── 3.1 插入 O(n) ─── */
 //顺序表的基本操作--插入 O(n)
 #define MaxSize 10
 typedef struct {
@@ -109,7 +130,7 @@ void ListInsert(SqList &L, int i, int e) {
     L.data[i-1]=e;
     L.length++;
 }
-//更新修改版插入操作
+//完善版（带合法性检查）
 bool ListInsert(SqList &L, int i, int e) {
     if(i<1 || i>L.length+1) 
         return false; //插入位置不合法
@@ -130,6 +151,7 @@ int main() {
     return 0;
 }
 
+/* ─── 3.2 删除 O(n) ─── */
 //顺序表的基本操作--删除 O(n)
 bool ListDelete(SqList &L, int i, int &e) {
     if(i<1 || i>L.length) 
@@ -153,7 +175,8 @@ int main() {
     return 0;
 }
 
-//顺序表的按位查找 O(1)
+/* ─── 3.3 按位查找 O(1) ─── */
+//顺序表的核心优势：随机存取
 #define InitSize 10
 typedef struct {
     ElemType *data;//指示动态分配数组的指针
@@ -165,8 +188,7 @@ ElemType GetElem(SeqList L, int i){
     return L.data[i-1];
 }
 
-//顺序表的按值查找 O(n)
-//eg
+/* ─── 3.4 按值查找 O(n) ─── */
 typedef struct {
     ElemType *data;//指示动态分配数组的指针
     int MaxSize;

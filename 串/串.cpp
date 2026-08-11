@@ -1,3 +1,11 @@
+/* ═══════════════════════════════════════════════════════════════════
+ * 串 (String) — 存储结构与基本操作
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+ * 一、串的存储方式
+ * ───────────────────────────────────────── */
+
 //串的定长顺序存储
 #define MAXLEN 255
 typedef struct {
@@ -5,6 +13,7 @@ typedef struct {
     int length;
 } SString;
 
+/* ─── 1.1 堆分配存储 ─── */
 //堆分配存储
 typedef struct {
     char *ch;
@@ -15,19 +24,24 @@ HString S;
 S.ch = (char *)malloc(MAXLEN * sizeof(char));
 S.length = 0;
 
+/* ─── 1.2 链式存储（低效，存储密度低） ─── */
 //链式存储
 typedef struct StringNode {
     char ch;//只有一个字节
     struct StringNode *next;//4B
 }StringNode, *String;
 
-//改为
+//改进：每个结点存多个字符，提高存储密度
 typedef struct StringNode {
     char ch[4];
     StringNode *next;
 }StringNode, *String;
 
-//基本操作
+
+/* ─────────────────────────────────────────
+ * 二、基本操作
+ * ───────────────────────────────────────── */
+
 //赋值
 void StrAssign(SString &S, char *ch) {
     int i = 0;
@@ -73,6 +87,7 @@ void DestroyString(SString &S) {
 }
 
 
+/* ─── 2.1 求子串 ─── */
 //求字串 返回串S的第pos个字符起长度为len的子串
 bool SubString(SString &Sub, SString S, int pos, int len) {
     if (pos + len - 1 > S.length)
@@ -83,6 +98,7 @@ bool SubString(SString &Sub, SString S, int pos, int len) {
     return true;
 }
 
+/* ─── 2.2 比较与定位 ─── */
 //比较
 int StrCompare(SString S1, SString S2) {
     for (int i = 0; i < S1.length && i < S2.length; i++) {

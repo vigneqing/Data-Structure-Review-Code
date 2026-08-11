@@ -1,3 +1,11 @@
+/* ═══════════════════════════════════════════════════════════════════
+ * 其他链表类型：双链表 / 循环链表 / 静态链表
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+ * 一、双链表 (Double Linked List)
+ * ───────────────────────────────────────── */
+
 //双链表的初始化（带头结点）
 typedef struct DNode
 {
@@ -26,6 +34,7 @@ void testDLinkList()
         printf("双链表初始化失败！\n");
 }
 
+/* ─── 1.1 后插操作 ─── */
 //双链表的插入（后插）
 bool InsertNextDNode(DNode *p, DNode *s){
     if (p == NULL || s == NULL) //判断指针是否为空
@@ -38,6 +47,7 @@ bool InsertNextDNode(DNode *p, DNode *s){
     return true;
 }
 
+/* ─── 1.2 删除操作 ─── */
 //双链表的删除
 bool DeleteNextDNode(DNode *p){
     if(p == NULL ) return false; //判断指针是否为空
@@ -50,7 +60,7 @@ bool DeleteNextDNode(DNode *p){
     return true; 
 }
 
-void DestoryList(DLinkList &L){
+/* ─── 1.3 销毁与遍历 ─── */(DLinkList &L){
     while (L->next != NULL) //当链表不为空时
     {
         DeleteNextDNode(L); //删除头结点的后继结点
@@ -68,6 +78,12 @@ void TraverseDLinkList(DLinkList L){
         p = p->next; //指针后移
     }
 }
+
+
+
+/* ─────────────────────────────────────────
+ * 二、循环单链表 (Circular Singly Linked List)
+ * ───────────────────────────────────────── */
 
 //循环单链表
 typedef struct CNode
@@ -98,7 +114,9 @@ bool IsLast(CLinkList L, CNode *p)
     return p->next == L; //如果结点p的后继指针指向头结点，则p为最后一个结点
 }
 
-//初始化循环双链表
+/* ─────────────────────────────────────────
+ * 三、循环双链表 (Circular Doubly Linked List)
+ * ───────────────────────────────────────── */
 bool InitCDLinkList(CLinkList &L)
 {
     L = (CNode *)malloc(sizeof(CNode)); //创建头结点
@@ -128,7 +146,7 @@ bool isLast(CLinkList L, CNode *p)
     return p->next == L; //如果结点p的后继指针指向头结点，则p为最后一个结点
 }
 
-//循环双链表的插入
+//循环双链表的插入（无需判断空，因为是循环的）
 bool InsertNextDNode(DNode *p, DNode *s){
     s->next = p->next; //将s的后继指针指向p的后继结点
     p->next->prior = s; //将p的后继结点的前驱指针指向s
@@ -136,6 +154,13 @@ bool InsertNextDNode(DNode *p, DNode *s){
     p->next = s; 
     return true;
 }//不用判断空
+
+
+
+/* ─────────────────────────────────────────
+ * 四、静态链表 (Static Linked List)
+ * 用数组模拟链表，通过 next 下标串联，适合不支持指针的语言
+ * ───────────────────────────────────────── */
 
 //静态列表
 #define MAXSIZE 10
@@ -150,7 +175,7 @@ void testSLinkList(){
     //...........
 }
 
-//课本
+// 课本版本：用 typedef 数组定义
 #define MAXSIZE 10
 typedef struct
 {

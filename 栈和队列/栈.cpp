@@ -1,3 +1,11 @@
+/* ═══════════════════════════════════════════════════════════════════
+ * 栈 (Stack) — LIFO 后进先出
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+ * 一、顺序栈
+ * ───────────────────────────────────────── */
+
 //顺序栈的定义LIFO
 #define MaxSize 10
 typedef struct {
@@ -46,6 +54,11 @@ bool GetTop(SqStack S,ElemType &x){
     return true;
 }
 
+
+/* ─────────────────────────────────────────
+ * 二、共享栈（两个栈共享同一数组空间）
+ * ───────────────────────────────────────── */
+
 //共享栈
 #define MaxSize 10
 typedef struct {
@@ -54,11 +67,16 @@ typedef struct {
     int top1;
 }ShStack;
 
-//初始化
+//初始化共享栈
 void InitStack(ShStack &S){
     S.top0 = -1;
     S.top1 = MaxSize;
 }
+
+
+/* ─────────────────────────────────────────
+ * 三、链栈（链式存储的栈，头插法实现）
+ * ───────────────────────────────────────── */
 
 //栈链（链式栈）
 typedef struct Linknode{
@@ -66,6 +84,7 @@ typedef struct Linknode{
     struct Linknode *next;
 }*LiStack;  //LiStack 是指向节点的指针类型
 
+/* ─── 3.1 初始化与判空 ─── */
 //初始化链栈
 void InitStack(LiStack &S){
     S = NULL;  //栈为空时，栈顶指针指向NULL
@@ -76,6 +95,7 @@ bool StackEmpty(LiStack S){
     return S == NULL;
 }
 
+/* ─── 3.2 进栈（头插法，新结点始终作为新栈顶） ─── */
 //进栈操作（头插法，新节点始终作为新的栈顶）
 bool Push(LiStack &S, ElemType x){
     Linknode *p = (Linknode*)malloc(sizeof(Linknode));
@@ -87,7 +107,7 @@ bool Push(LiStack &S, ElemType x){
     return true;
 }
 
-//出栈操作
+/* ─── 3.3 出栈 ─── */
 bool Pop(LiStack &S, ElemType &x){
     if(S == NULL)  //栈空
         return false;
@@ -98,6 +118,7 @@ bool Pop(LiStack &S, ElemType &x){
     return true;
 }
 
+/* ─── 3.4 取栈顶与销毁 ─── */
 //读取栈顶元素
 bool GetTop(LiStack S, ElemType &x){
     if(S == NULL)
